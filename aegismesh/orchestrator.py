@@ -4,6 +4,7 @@ import uuid
 
 from .agents import BlueAgent, GreenAgent, RedAgent
 from .environment import get_scenario, path_risk
+from .ml import score_workflow
 from .models import RunReport
 from .observability import TraceCollector
 from .policy import PolicyGateway
@@ -24,6 +25,7 @@ class AegisMeshOrchestrator:
         green = GreenAgent(self.policy, trace).run(scenario, original_risk)
 
         residual = green.payload["counterfactual"]["residual_risk"]
+        workflow_ml = score_workflow(trace.events)
         trace.persist()
         return RunReport(
             run_id=run_id,
@@ -34,5 +36,6 @@ class AegisMeshOrchestrator:
             red=red,
             blue=blue,
             green=green,
+            workflow_ml=workflow_ml,
             traces=trace.events,
         )
