@@ -56,6 +56,7 @@ class RunReport:
     red: AgentResult
     blue: AgentResult
     green: AgentResult
+    workflow_ml: dict[str, Any]
     traces: list[dict[str, Any]]
 
     def to_dict(self) -> dict[str, Any]:
