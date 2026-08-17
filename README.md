@@ -15,13 +15,19 @@
 
 **Red Agent · Blue Agent · Green Agent · Orchestration · RAG · Evidence Graph · Policy Gateway · Counterfactual Security · Observability**
 
-[Platform](#platform-overview) · [Agents](#multi-agent-security-model) · [Architecture](#architecture) · [Safety](#safety-architecture) · [Evaluation](#evaluation-model) · [API](#api) · [Quick Start](#quick-start)
+[Overview](#platform-overview) · [Dashboard](#dashboard-preview) · [Sample I/O](#sample-input--output) · [Agents](#multi-agent-security-model) · [Architecture](#architecture) · [Safety](#safety-architecture) · [Evaluation](#evaluation-model) · [API](#api) · [Quick Start](#quick-start)
 
 </div>
 
 ---
 
-![AegisMesh dashboard preview](assets/dashboard-preview.svg)
+## Dashboard preview
+
+<p align="center">
+  <img src="assets/dashboard-preview.svg" alt="AegisMesh multi-agent security dashboard preview" width="100%" />
+</p>
+
+> **Static synthetic preview.** The dashboard visualizes the same concepts exposed by the runnable lab: Red Agent simulation, Blue Agent evidence reconstruction, Green Agent counterfactual hardening, policy decisions, agent handoffs, and observability. It is not a screenshot of a Microsoft, customer, or production environment.
 
 > **Core question:** Can specialized security agents safely collaborate to simulate a threat, investigate the resulting evidence, recommend the smallest effective defensive change, and prove the impact through replay—without giving autonomous agents unrestricted control of real systems?
 
@@ -62,6 +68,105 @@ Synthetic enterprise state
 ```
 
 The design intentionally separates **agent reasoning** from **security authority**. Agents may propose; independent controls decide what is permitted.
+
+## Sample input & output
+
+The public lab ships with three versioned synthetic scenarios. A run can be started through the API by selecting a scenario ID; the orchestrator loads the corresponding synthetic enterprise path and coordinates all three agents.
+
+### Sample input
+
+```http
+POST /simulate/oauth-mailbox-abuse
+```
+
+The selected scenario resolves to the following synthetic security state:
+
+```json
+{
+  "scenario_id": "oauth-mailbox-abuse",
+  "name": "OAuth mailbox abuse",
+  "objective": "Exercise a synthetic risky-consent path into mailbox data.",
+  "techniques": ["T1098.003", "T1114.002"],
+  "path": [
+    {
+      "source": "user",
+      "target": "oauth_grant",
+      "relation": "consent",
+      "risk": 0.58,
+      "control": "admin consent workflow"
+    },
+    {
+      "source": "oauth_grant",
+      "target": "mailbox",
+      "relation": "persistent_api_access",
+      "risk": 0.69,
+      "control": "scope reduction"
+    }
+  ],
+  "boundary": "synthetic defensive simulation"
+}
+```
+
+### Sample output
+
+AegisMesh returns one traceable run containing separate Red, Blue, and Green results. The example below is abbreviated to emphasize the decision flow; `run_id` is generated at runtime.
+
+```json
+{
+  "run_id": "<generated-run-id>",
+  "scenario_id": "oauth-mailbox-abuse",
+  "original_risk": 0.8698,
+  "residual_risk": 0.6814,
+  "risk_reduction": 0.1884,
+  "red": {
+    "status": "complete",
+    "simulation_only": true,
+    "techniques": ["T1098.003", "T1114.002"],
+    "evidence_ids": [
+      "evt-oauth-mailbox-abuse-01",
+      "evt-oauth-mailbox-abuse-02"
+    ]
+  },
+  "blue": {
+    "status": "complete",
+    "verdict": "synthetic_attack_path_reconstructed",
+    "evidence_coverage": 1.0,
+    "grounded": true,
+    "reconstructed_path": [
+      "user -> oauth_grant",
+      "oauth_grant -> mailbox"
+    ],
+    "recommended_response": "human review required before any consequential containment action"
+  },
+  "green": {
+    "status": "complete",
+    "selected_control": "scope reduction",
+    "counterfactual": {
+      "original_risk": 0.8698,
+      "residual_risk": 0.6814,
+      "risk_reduction": 0.1884,
+      "source_environment_mutated": false
+    }
+  },
+  "safety": {
+    "live_exploitation": false,
+    "consequential_actions": "approval-gated",
+    "data_boundary": "synthetic only"
+  }
+}
+```
+
+### What the example demonstrates
+
+| Stage | Input | Output |
+| --- | --- | --- |
+| **Red** | Synthetic OAuth trust path | Synthetic events + ATT&CK-style context |
+| **Blue** | Events + local security knowledge | Evidence-grounded reconstructed path |
+| **Green** | Reconstructed path + available controls | Ranked control + isolated counterfactual replay |
+| **Policy** | Every typed tool request | Allow/deny decision recorded in the trace |
+| **Human boundary** | Consequential recommendation | Review required; no autonomous production action |
+
+The risk values above are **internal synthetic graph scores**, not probabilities of compromise or claims of real-world control effectiveness.
 
 ## Multi-agent security model
 
@@ -118,27 +223,21 @@ The resulting reduction is a **synthetic counterfactual measurement**, not a pro
 ```mermaid
 flowchart LR
     E["Synthetic enterprise\nidentity · endpoint · SaaS · cloud · AI"] --> O["Multi-agent orchestrator"]
-
     O --> R["Red Agent\nattack-path simulation"]
     O --> B["Blue Agent\ninvestigation"]
     O --> G["Green Agent\nhardening"]
-
     R --> P["Policy gateway"]
     B --> P
     G --> P
-
     P --> T["Allow-listed tools"]
     T --> X[("Evidence graph")]
-
     K["Security knowledge base"] --> Q["Retrieval layer"]
     Q --> B
     Q --> G
-
     X --> B
     B --> G
     G --> C["Counterfactual replay"]
     C --> X
-
     O --> OBS["Traces · latency · decisions · tool events"]
     P --> H{"Human approval boundary"}
 ```
@@ -160,8 +259,6 @@ flowchart LR
 ## AI & model integration
 
 AegisMesh treats the model as a replaceable component of a larger security system.
-
-The model-routing interface is designed around task characteristics such as:
 
 ```text
 structured extraction  → low-cost model class
@@ -197,33 +294,7 @@ The current implementation stays dependency-light and deterministic. A productio
 
 ## Evidence graph
 
-All agents work over a common evidence model rather than exchanging free-form conclusions.
-
-Representative entities include:
-
-```text
-user
-identity session
-device
-application
-OAuth grant
-cloud workload
-AI agent
-resource
-control
-security event
-technique
-```
-
-The graph preserves the distinction between:
-
-- observed synthetic evidence;
-- modeled relationships;
-- agent hypotheses;
-- recommended controls;
-- replay results.
-
-That separation prevents a model-generated hypothesis from silently becoming a fact.
+All agents work over a common evidence model rather than exchanging free-form conclusions. The graph preserves the distinction between observed synthetic evidence, modeled relationships, agent hypotheses, recommended controls, and replay results. That separation prevents a model-generated hypothesis from silently becoming a fact.
 
 ## Safety architecture
 
@@ -256,8 +327,6 @@ Key design principles:
 
 AegisMesh evaluates the **workflow**, not just the quality of one generated answer.
 
-The executable synthetic baseline measures dimensions such as:
-
 | Dimension | What is evaluated |
 | --- | --- |
 | Simulation validity | Red Agent stays inside approved synthetic paths and tools |
@@ -274,36 +343,15 @@ Runtime reports expose the actual values generated from the checked-in fixtures.
 ## Example workflow
 
 ```text
-1. RED
-   Selects a modeled path:
-   user → session → SaaS app → sensitive resource
-
-2. SIMULATION
-   Generates synthetic identity, token, and resource-access events
-
-3. BLUE
-   Correlates the events
-   Retrieves defensive context
-   Reconstructs the evidence path
-   Produces an investigation with cited evidence
-
-4. GREEN
-   Evaluates candidate controls
-   Proposes token protection / scope reduction / stronger authentication
-
-5. REPLAY
-   Copies the synthetic environment
-   Applies the selected control
-   Re-scores the path
-
-6. REVIEW
-   Original state vs hardened state
-   Evidence, assumptions, and agent traces remain inspectable
+1. RED       Select a modeled path
+2. SIMULATE  Generate synthetic security events
+3. BLUE      Correlate evidence + retrieve context + reconstruct path
+4. GREEN     Evaluate and rank defensive controls
+5. REPLAY    Apply selected control to copied synthetic state
+6. REVIEW    Compare original vs hardened state with traces intact
 ```
 
 ## API
-
-The FastAPI service exposes the workflow without granting agents unrestricted execution authority.
 
 ```text
 GET  /healthz
@@ -332,19 +380,16 @@ The browser dashboard is designed around four operational views:
 └────────────────────────┘  └────────────────────────┘
 ```
 
-The checked-in SVG is a static preview of the intended analyst experience. It is not a screenshot of a production Microsoft or customer system.
-
 ## Quick Start
 
 ```bash
 git clone https://github.com/VinayK88/AegisMesh.git
 cd AegisMesh
-
 python -m venv .venv
 source .venv/bin/activate
 pip install -e '.[api]'
 
-# Run the synthetic multi-agent workflow
+# Run synthetic multi-agent workflow
 aegismesh
 
 # Run tests
@@ -384,19 +429,7 @@ assets/                dashboard preview
 
 ## Production evolution
 
-A production-grade implementation would add:
-
-- authenticated, least-privileged enterprise security connectors;
-- durable workflow state and distributed queues;
-- hybrid vector + lexical retrieval with tenant isolation;
-- versioned model adapters and model-quality routing;
-- OpenTelemetry traces, SLOs, cost budgets, and failure dashboards;
-- checkpointing, retries, idempotency, and replay-safe tool execution;
-- human approval workflows for consequential actions;
-- model and retrieval evaluation with temporal holdouts;
-- prompt-injection resistance and tool-definition integrity monitoring;
-- analyst feedback loops and calibrated escalation thresholds;
-- red/blue/green scenario libraries with explicit authorization boundaries.
+A production-grade implementation would add authenticated least-privileged enterprise security connectors, durable workflow state and queues, hybrid vector + lexical retrieval with tenant isolation, versioned model adapters, OpenTelemetry traces and SLOs, checkpointing/retries/idempotency, human approval workflows, temporal evaluation holdouts, prompt-injection resistance, analyst feedback loops, and expanded authorized scenario libraries.
 
 ## Evaluation boundary
 
