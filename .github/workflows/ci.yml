@@ -1,0 +1,46 @@
+name: AegisMesh CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[api]'
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: CLI smoke test
+        run: aegismesh > /tmp/aegismesh-report.json
+      - name: Validate report contract
+        run: |
+          python - <<'PY'
+          import json
+          data = json.load(open('/tmp/aegismesh-report.json'))
+          assert data['summary']['workflow_completion'] == '3/3'
+          assert data['summary']['counterfactuals_improved'] == '3/3'
+          assert data['summary']['unauthorized_tools_executed'] == 0
+          PY
+      - name: API smoke test
+        run: |
+          python - <<'PY'
+          from aegismesh.api import app
+          paths = {route.path for route in app.routes}
+          assert '/healthz' in paths
+          assert '/report' in paths
+          assert '/simulate/{scenario_id}' in paths
+          PY
+      - name: Compile
+        run: python -m compileall aegismesh tests

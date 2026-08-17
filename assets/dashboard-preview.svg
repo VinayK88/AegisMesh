@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
+  <title id="title">AegisMesh dashboard preview</title>
+  <desc id="desc">Static synthetic preview of Red, Blue, Green agents and safety telemetry.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#0e2038"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#60a5fa"/><stop offset="1" stop-color="#34d399"/></linearGradient>
+  </defs>
+  <rect width="1400" height="820" rx="28" fill="url(#bg)"/>
+  <text x="56" y="68" font-family="Inter,Arial" font-size="30" font-weight="800" fill="#f8fafc">AegisMesh</text>
+  <text x="56" y="100" font-family="Inter,Arial" font-size="14" font-weight="600" fill="#7dd3fc">MULTI-AGENT AI SECURITY ORCHESTRATION · STATIC SYNTHETIC PREVIEW</text>
+  <text x="56" y="142" font-family="Inter,Arial" font-size="16" fill="#9fb1c8">Red simulates · Blue investigates · Green hardens · Policy remains outside the agents</text>
+
+  <rect x="56" y="180" width="396" height="230" rx="18" fill="#111d30" stroke="#2a3d58"/>
+  <text x="82" y="216" font-family="Inter,Arial" font-size="13" font-weight="800" fill="#fb7185">RED AGENT</text>
+  <text x="82" y="254" font-family="Inter,Arial" font-size="23" font-weight="750" fill="#f8fafc">Adversarial simulation</text>
+  <text x="82" y="294" font-family="Inter,Arial" font-size="15" fill="#a8b7cb">Modeled path</text>
+  <text x="82" y="322" font-family="monospace" font-size="14" fill="#dbeafe">identity → session → SaaS → data</text>
+  <text x="82" y="358" font-family="Inter,Arial" font-size="14" fill="#a8b7cb">Scope</text>
+  <text x="174" y="358" font-family="Inter,Arial" font-size="14" font-weight="700" fill="#86efac">simulation only</text>
+  <text x="82" y="386" font-family="Inter,Arial" font-size="14" fill="#a8b7cb">Live exploit tools</text>
+  <text x="210" y="386" font-family="Inter,Arial" font-size="14" font-weight="700" fill="#86efac">none</text>
+
+  <rect x="502" y="180" width="396" height="230" rx="18" fill="#111d30" stroke="#2a3d58"/>
+  <text x="528" y="216" font-family="Inter,Arial" font-size="13" font-weight="800" fill="#60a5fa">BLUE AGENT</text>
+  <text x="528" y="254" font-family="Inter,Arial" font-size="23" font-weight="750" fill="#f8fafc">Evidence investigation</text>
+  <text x="528" y="294" font-family="Inter,Arial" font-size="15" fill="#a8b7cb">Grounding</text>
+  <text x="632" y="294" font-family="Inter,Arial" font-size="15" font-weight="700" fill="#86efac">evidence IDs retained</text>
+  <text x="528" y="330" font-family="Inter,Arial" font-size="15" fill="#a8b7cb">Retrieval</text>
+  <text x="632" y="330" font-family="Inter,Arial" font-size="15" font-weight="700" fill="#dbeafe">local security corpus</text>
+  <text x="528" y="366" font-family="Inter,Arial" font-size="15" fill="#a8b7cb">Output</text>
+  <text x="632" y="366" font-family="Inter,Arial" font-size="15" font-weight="700" fill="#dbeafe">path + evidence + context</text>
+
+  <rect x="948" y="180" width="396" height="230" rx="18" fill="#111d30" stroke="#2a3d58"/>
+  <text x="974" y="216" font-family="Inter,Arial" font-size="13" font-weight="800" fill="#34d399">GREEN AGENT</text>
+  <text x="974" y="254" font-family="Inter,Arial" font-size="23" font-weight="750" fill="#f8fafc">Counterfactual hardening</text>
+  <text x="974" y="294" font-family="Inter,Arial" font-size="15" fill="#a8b7cb">Controls</text>
+  <text x="1078" y="294" font-family="Inter,Arial" font-size="15" font-weight="700" fill="#dbeafe">ranked by modeled reduction</text>
+  <text x="974" y="330" font-family="Inter,Arial" font-size="15" fill="#a8b7cb">Replay</text>
+  <text x="1078" y="330" font-family="Inter,Arial" font-size="15" font-weight="700" fill="#86efac">copied state only</text>
+  <text x="974" y="366" font-family="Inter,Arial" font-size="15" fill="#a8b7cb">Authority</text>
+  <text x="1078" y="366" font-family="Inter,Arial" font-size="15" font-weight="700" fill="#fcd34d">recommendation only</text>
+
+  <rect x="56" y="452" width="1288" height="124" rx="18" fill="#0e1a2b" stroke="#2a3d58"/>
+  <text x="82" y="486" font-family="Inter,Arial" font-size="13" font-weight="800" fill="#c4b5fd">POLICY &amp; HUMAN CONTROL PLANE</text>
+  <text x="82" y="526" font-family="Inter,Arial" font-size="18" font-weight="700" fill="#f8fafc">Typed tool request</text>
+  <text x="275" y="526" font-family="Inter,Arial" font-size="18" fill="#64748b">→</text>
+  <text x="315" y="526" font-family="Inter,Arial" font-size="18" font-weight="700" fill="#f8fafc">role allowlist</text>
+  <text x="468" y="526" font-family="Inter,Arial" font-size="18" fill="#64748b">→</text>
+  <text x="508" y="526" font-family="Inter,Arial" font-size="18" font-weight="700" fill="#f8fafc">approval boundary</text>
+  <text x="700" y="526" font-family="Inter,Arial" font-size="18" fill="#64748b">→</text>
+  <text x="740" y="526" font-family="Inter,Arial" font-size="18" font-weight="700" fill="#f8fafc">synthetic execution</text>
+  <text x="935" y="526" font-family="Inter,Arial" font-size="18" fill="#64748b">→</text>
+  <text x="975" y="526" font-family="Inter,Arial" font-size="18" font-weight="700" fill="#f8fafc">trace + evidence</text>
+
+  <rect x="56" y="618" width="300" height="130" rx="18" fill="#111d30" stroke="#2a3d58"/>
+  <text x="82" y="652" font-family="Inter,Arial" font-size="12" font-weight="800" fill="#94a3b8">SCENARIO LIBRARY</text>
+  <text x="82" y="704" font-family="Inter,Arial" font-size="32" font-weight="800" fill="#f8fafc">3</text>
+  <text x="130" y="704" font-family="Inter,Arial" font-size="14" fill="#a8b7cb">versioned synthetic paths</text>
+
+  <rect x="382" y="618" width="300" height="130" rx="18" fill="#111d30" stroke="#2a3d58"/>
+  <text x="408" y="652" font-family="Inter,Arial" font-size="12" font-weight="800" fill="#94a3b8">AGENT HANDOFFS</text>
+  <text x="408" y="704" font-family="Inter,Arial" font-size="22" font-weight="800" fill="#f8fafc">Red → Blue → Green</text>
+
+  <rect x="708" y="618" width="300" height="130" rx="18" fill="#111d30" stroke="#2a3d58"/>
+  <text x="734" y="652" font-family="Inter,Arial" font-size="12" font-weight="800" fill="#94a3b8">CONSEQUENTIAL ACTIONS</text>
+  <text x="734" y="704" font-family="Inter,Arial" font-size="22" font-weight="800" fill="#fcd34d">approval-gated</text>
+
+  <rect x="1034" y="618" width="310" height="130" rx="18" fill="#111d30" stroke="#2a3d58"/>
+  <text x="1060" y="652" font-family="Inter,Arial" font-size="12" font-weight="800" fill="#94a3b8">OBSERVABILITY</text>
+  <text x="1060" y="704" font-family="Inter,Arial" font-size="22" font-weight="800" fill="#86efac">policy + step traces</text>
+
+  <rect x="56" y="776" width="1288" height="5" rx="2.5" fill="url(#accent)"/>
+</svg>

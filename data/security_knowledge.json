@@ -1,0 +1,7 @@
+[
+  {"id":"kb-mfa","title":"Phishing-resistant authentication","scope":"defensive control guidance"},
+  {"id":"kb-token","title":"Token protection","scope":"defensive control guidance"},
+  {"id":"kb-oauth","title":"OAuth least privilege","scope":"defensive control guidance"},
+  {"id":"kb-jit","title":"Just-in-time privilege","scope":"defensive control guidance"},
+  {"id":"kb-evidence","title":"Evidence-grounded investigation","scope":"analytical methodology"}
+]

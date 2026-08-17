@@ -1,0 +1,17 @@
+[
+  {
+    "id": "identity-saas-exfil",
+    "name": "Identity to SaaS data path",
+    "boundary": "synthetic defensive simulation"
+  },
+  {
+    "id": "oauth-mailbox-abuse",
+    "name": "OAuth mailbox abuse",
+    "boundary": "synthetic defensive simulation"
+  },
+  {
+    "id": "cloud-admin-pivot",
+    "name": "Cloud administrator pivot",
+    "boundary": "synthetic defensive simulation"
+  }
+]
