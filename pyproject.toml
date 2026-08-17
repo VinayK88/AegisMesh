@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aegismesh"
-version = "0.1.0"
-description = "Defensive multi-agent AI security orchestration lab"
+version = "0.2.0"
+description = "Defensive multi-agent AI security orchestration with learned routing, control prioritization, and workflow anomaly monitoring"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = ["scikit-learn==1.7.2"]
 
 [project.optional-dependencies]
 api = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1"]
