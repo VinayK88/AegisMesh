@@ -4,18 +4,18 @@
 
 ### Multi-Agent AI Security Orchestration for Adversarial Simulation, Investigation & Hardening
 
-**A defensive AI-native cybersecurity platform that coordinates specialized Red, Blue, and Green agents over a shared evidence graph—with policy-gated tools, retrieval-grounded reasoning, counterfactual hardening, and human-controlled decisions.**
+**A defensive AI-native cybersecurity platform coordinating specialized Red, Blue, and Green agents over a shared evidence graph—with retrieval-grounded reasoning, learned model routing, ML-assisted hardening, workflow anomaly monitoring, policy-gated tools, and human-controlled decisions.**
 
 [![CI](https://github.com/VinayK88/AegisMesh/actions/workflows/ci.yml/badge.svg)](https://github.com/VinayK88/AegisMesh/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Agentic AI](https://img.shields.io/badge/AI-Multi--Agent%20Security-6D28D9)](#multi-agent-security-model)
-[![Safety](https://img.shields.io/badge/Mode-Defensive%20Simulation-0F766E)](#safety-boundary)
+[![Security ML](https://img.shields.io/badge/ML-Routing%20%7C%20Ranking%20%7C%20Anomaly-6D28D9)](#security-ml-layer)
+[![Safety](https://img.shields.io/badge/Mode-Defensive%20Simulation-0F766E)](#safety-architecture)
 [![Data](https://img.shields.io/badge/Data-Synthetic%20Only-475569)](#evaluation-boundary)
 
-**Red Agent · Blue Agent · Green Agent · Orchestration · RAG · Evidence Graph · Policy Gateway · Counterfactual Security · Observability**
+**Red Agent · Blue Agent · Green Agent · RAG · Evidence Graph · Security ML · Policy Gateway · Counterfactual Security · Observability**
 
-[Overview](#platform-overview) · [Dashboard](#dashboard-preview) · [Sample I/O](#sample-input--output) · [Agents](#multi-agent-security-model) · [Architecture](#architecture) · [Safety](#safety-architecture) · [Evaluation](#evaluation-model) · [API](#api) · [Quick Start](#quick-start)
+[Overview](#platform-overview) · [Dashboard](#dashboard-preview) · [Sample I/O](#sample-input--output) · [Security ML](#security-ml-layer) · [Agents](#multi-agent-security-model) · [Architecture](#architecture) · [Safety](#safety-architecture) · [Evaluation](#evaluation-model) · [Quick Start](#quick-start)
 
 </div>
 
@@ -27,9 +27,9 @@
   <img src="assets/dashboard-preview.svg" alt="AegisMesh multi-agent security dashboard preview" width="100%" />
 </p>
 
-> **Static synthetic preview.** The dashboard visualizes the same concepts exposed by the runnable lab: Red Agent simulation, Blue Agent evidence reconstruction, Green Agent counterfactual hardening, policy decisions, agent handoffs, and observability. It is not a screenshot of a Microsoft, customer, or production environment.
+> **Static synthetic preview.** The dashboard represents the runnable lab's Red Agent simulation, Blue Agent investigation, Green Agent hardening, policy decisions, evidence graph, workflow health, and observability. It is not a screenshot of a Microsoft, customer, or production environment.
 
-> **Core question:** Can specialized security agents safely collaborate to simulate a threat, investigate the resulting evidence, recommend the smallest effective defensive change, and prove the impact through replay—without giving autonomous agents unrestricted control of real systems?
+> **Core question:** Can specialized security agents safely collaborate to simulate a threat, investigate the evidence, recommend the smallest effective defensive change, and verify the impact through replay—without giving autonomous agents unrestricted control of real systems?
 
 ## Platform overview
 
@@ -37,49 +37,53 @@ AegisMesh models an end-to-end AI-native security workflow rather than a single 
 
 A synthetic enterprise environment is shared by three specialized agents:
 
-- the **Red Agent** performs bounded, simulation-only adversarial planning;
-- the **Blue Agent** reconstructs activity from evidence, retrieves relevant security context, and builds an explainable investigation;
-- the **Green Agent** recommends defensive controls and replays the scenario to measure counterfactual improvement.
+- **Red Agent** performs bounded, simulation-only adversarial planning and emits synthetic telemetry.
+- **Blue Agent** reconstructs activity from evidence, retrieves security context, and produces a grounded investigation.
+- **Green Agent** uses ML to prioritize defensive controls and verifies the selected recommendation with deterministic counterfactual replay.
 
-A central orchestrator coordinates those agents while keeping tool authorization, evidence provenance, human approval, and system telemetry outside the agents themselves.
+The orchestrator adds two platform-level intelligence layers: a **learned model router** for task/model selection and an **Isolation Forest workflow-health monitor** for unusual agent behavior. Tool authorization, approval requirements, and consequential-action boundaries remain deterministic and outside the models.
 
 ```text
 Synthetic enterprise state
           │
           ▼
-  ┌─────────────────┐
-  │  Orchestrator   │
-  └────────┬────────┘
-           │
-     ┌─────┼─────┐
-     ▼     ▼     ▼
-   RED    BLUE  GREEN
-   agent  agent  agent
-     │     │     │
-     └─────┼─────┘
-           ▼
-   Shared evidence graph
-           │
-           ▼
- Policy + approval gateway
-           │
-           ▼
- Counterfactual replay
+  ┌─────────────────────┐
+  │ Multi-Agent         │
+  │ Orchestrator        │
+  └──────────┬──────────┘
+             │
+      ┌──────┼──────┐
+      ▼      ▼      ▼
+     RED    BLUE   GREEN
+      │      │       │
+      │      │    ML control ranking
+      │      │       │
+      └──────┼───────┘
+             ▼
+      Shared evidence graph
+             │
+      Learned model router
+             │
+      Workflow anomaly ML
+             │
+             ▼
+       Policy + approval
+             │
+             ▼
+    Deterministic replay
 ```
 
-The design intentionally separates **agent reasoning** from **security authority**. Agents may propose; independent controls decide what is permitted.
+**Agents propose. ML prioritizes. Evidence grounds. Policy authorizes. Replay verifies. Humans remain in control.**
 
 ## Sample input & output
 
-The public lab ships with three versioned synthetic scenarios. A run can be started through the API by selecting a scenario ID; the orchestrator loads the corresponding synthetic enterprise path and coordinates all three agents.
+The public lab ships with three versioned synthetic scenarios. A run is started by selecting a scenario ID; the orchestrator loads that synthetic enterprise path and coordinates all three agents.
 
 ### Sample input
 
 ```http
 POST /simulate/oauth-mailbox-abuse
 ```
-
-The selected scenario resolves to the following synthetic security state:
 
 ```json
 {
@@ -109,7 +113,7 @@ The selected scenario resolves to the following synthetic security state:
 
 ### Sample output
 
-AegisMesh returns one traceable run containing separate Red, Blue, and Green results. The example below is abbreviated to emphasize the decision flow; `run_id` is generated at runtime.
+The actual API response contains complete traces, evidence graph data, retrieval results, model-routing metadata, ML control rankings, and workflow-health evidence. This abbreviated example shows the major decision boundaries:
 
 ```json
 {
@@ -121,124 +125,180 @@ AegisMesh returns one traceable run containing separate Red, Blue, and Green res
   "red": {
     "status": "complete",
     "simulation_only": true,
-    "techniques": ["T1098.003", "T1114.002"],
-    "evidence_ids": [
-      "evt-oauth-mailbox-abuse-01",
-      "evt-oauth-mailbox-abuse-02"
-    ]
+    "model_route": {
+      "model": "GradientBoostingClassifier",
+      "selected_model_class": "compact-model",
+      "safety_override": false
+    }
   },
   "blue": {
     "status": "complete",
     "verdict": "synthetic_attack_path_reconstructed",
     "evidence_coverage": 1.0,
     "grounded": true,
-    "reconstructed_path": [
-      "user -> oauth_grant",
-      "oauth_grant -> mailbox"
-    ],
-    "recommended_response": "human review required before any consequential containment action"
+    "model_route": {
+      "model": "GradientBoostingClassifier",
+      "selected_model_class": "reasoning-model"
+    }
   },
   "green": {
     "status": "complete",
-    "selected_control": "scope reduction",
+    "model_route": {
+      "selected_model_class": "high-reliability-model",
+      "safety_override": true
+    },
+    "ml_control_ranking": {
+      "model": "GradientBoostingRegressor",
+      "boundary": "ML prioritizes controls; deterministic counterfactual replay verifies impact"
+    },
+    "selected_control": {
+      "control": "scope reduction",
+      "verified_residual_risk": 0.6814,
+      "verified_risk_reduction": 0.1884
+    },
     "counterfactual": {
-      "original_risk": 0.8698,
-      "residual_risk": 0.6814,
-      "risk_reduction": 0.1884,
+      "prediction_verified_by_replay": true,
       "source_environment_mutated": false
     }
   },
-  "safety": {
-    "live_exploitation": false,
-    "consequential_actions": "approval-gated",
-    "data_boundary": "synthetic only"
+  "workflow_ml": {
+    "model": "IsolationForest",
+    "status": "NORMAL",
+    "boundary": "workflow-health anomaly score; not a compromise probability"
   }
 }
 ```
 
-### What the example demonstrates
+The risk values are **internal synthetic graph scores**, not compromise probabilities or claims of real-world control effectiveness.
 
-| Stage | Input | Output |
-| --- | --- | --- |
-| **Red** | Synthetic OAuth trust path | Synthetic events + ATT&CK-style context |
-| **Blue** | Events + local security knowledge | Evidence-grounded reconstructed path |
-| **Green** | Reconstructed path + available controls | Ranked control + isolated counterfactual replay |
-| **Policy** | Every typed tool request | Allow/deny decision recorded in the trace |
-| **Human boundary** | Consequential recommendation | Review required; no autonomous production action |
+## Security ML layer
 
-The risk values above are **internal synthetic graph scores**, not probabilities of compromise or claims of real-world control effectiveness.
+AegisMesh deliberately uses ML for **selection, prioritization, and monitoring**—not authorization.
+
+| ML component | Model | Purpose | Hard boundary |
+| --- | --- | --- | --- |
+| **Learned model router** | Gradient Boosting Classifier | Select compact, reasoning, or high-reliability model classes from task complexity, evidence, graph depth, risk, latency and cost context | Approval-required and high-impact tasks are deterministically forced to the highest-reliability route |
+| **Green control ranker** | Gradient Boosting Regressor | Rank defensive controls by predicted synthetic path-risk reduction | Deterministic counterfactual replay recomputes and verifies the final reduction |
+| **Workflow health monitor** | Isolation Forest | Detect unusual orchestration patterns such as excessive retries, denials, errors, repeated steps, or abnormal handoffs | Advisory workflow-health signal only; never authorizes or blocks tools |
+
+### Learned model routing
+
+```text
+Task + security context
+        │
+        ▼
+Gradient Boosting router
+        │
+   ┌────┼─────────┐
+   ▼    ▼         ▼
+compact reasoning high-reliability
+   │    │         │
+   └────┼─────────┘
+        ▼
+Deterministic safety override
+        │
+        ▼
+Selected model class
+```
+
+Features include task class, scenario complexity, evidence count, graph depth, modeled risk, latency budget, cost budget, and approval requirement.
+
+### ML-assisted Green Agent
+
+```text
+Attack path + candidate controls
+              │
+              ▼
+Gradient Boosting Regressor
+              │
+              ▼
+Predicted control ranking
+              │
+              ▼
+Top candidate
+              │
+              ▼
+Deterministic counterfactual replay
+              │
+              ▼
+Verified residual risk
+```
+
+The ML prediction is never reported as the final control effect. The deterministic replay result remains authoritative.
+
+### Agent workflow anomaly detection
+
+```text
+Agent / tool trace
+      │
+      ▼
+step + policy + transition features
+      │
+      ▼
+Isolation Forest
+      │
+      ▼
+anomaly percentile + top deviations
+      │
+      ▼
+NORMAL / REVIEW
+```
+
+The anomaly percentile is **not a compromise probability**. It measures deviation from a deterministic synthetic normal-workflow reference population.
+
+See [`docs/ml-security.md`](docs/ml-security.md) for model features, evaluation methodology, and governance boundaries.
 
 ## Multi-agent security model
 
 ### Red Agent — adversarial simulation
 
-The Red Agent asks:
+The Red Agent asks: **Which plausible attack path should the defender test next?**
 
-> **Which plausible attack path should the defender test next?**
-
-It operates only on synthetic graph state and approved simulation tools. It can:
-
-- identify modeled identity, endpoint, SaaS, cloud, and AI-agent attack paths;
-- select a bounded test path from the synthetic environment;
-- associate simulated behaviors with ATT&CK-style tactics and techniques;
-- generate synthetic security events for downstream investigation;
-- expose the assumptions behind the chosen path.
-
-It cannot exploit hosts, execute malware, scan networks, steal credentials, or interact with live targets.
+It can select modeled identity, endpoint, SaaS, cloud, and AI-agent paths; associate them with ATT&CK-style context; and emit synthetic events. It cannot exploit hosts, execute malware, scan networks, steal credentials, or interact with live targets.
 
 ### Blue Agent — investigation & evidence reasoning
 
-The Blue Agent asks:
+The Blue Agent asks: **What happened, what evidence supports the conclusion, and what remains uncertain?**
 
-> **What happened, what evidence supports that conclusion, and what remains uncertain?**
-
-It can:
-
-- correlate identity, endpoint, SaaS, cloud, and agent telemetry;
-- retrieve relevant security knowledge from the local evidence corpus;
-- reconstruct the simulated attack path;
-- maintain supporting and contradictory evidence;
-- map observations to ATT&CK-style context;
-- produce an evidence-grounded investigation summary;
-- recommend—not execute—containment actions.
+It correlates telemetry, retrieves local defensive knowledge, reconstructs the path, retains evidence IDs, maps ATT&CK-style context, and produces an evidence-grounded analyst result.
 
 ### Green Agent — security posture hardening
 
-The Green Agent asks:
+The Green Agent asks: **What is the smallest defensive change that most weakens the modeled path?**
 
-> **What is the smallest defensive change that most weakens the modeled path?**
-
-It can:
-
-- inspect the attack path and current controls;
-- propose least-privilege, identity, token, logging, segmentation, or application-control improvements;
-- rank candidate controls by modeled reduction;
-- replay the scenario after each proposed change;
-- compare original and residual path risk.
-
-The resulting reduction is a **synthetic counterfactual measurement**, not a production breach probability.
+It uses the learned control ranker to prioritize candidate controls, then replays the highest-ranked control against a copied synthetic environment and reports the verified residual graph risk. It recommends; it does not autonomously alter production systems.
 
 ## Architecture
 
 ```mermaid
 flowchart LR
     E["Synthetic enterprise\nidentity · endpoint · SaaS · cloud · AI"] --> O["Multi-agent orchestrator"]
-    O --> R["Red Agent\nattack-path simulation"]
+
+    O --> R["Red Agent\nsimulation"]
     O --> B["Blue Agent\ninvestigation"]
     O --> G["Green Agent\nhardening"]
+
+    MR["Gradient Boosting\nmodel router"] --> R
+    MR --> B
+    MR --> G
+
     R --> P["Policy gateway"]
     B --> P
     G --> P
+
     P --> T["Allow-listed tools"]
     T --> X[("Evidence graph")]
-    K["Security knowledge base"] --> Q["Retrieval layer"]
+
+    K["Security knowledge"] --> Q["Retrieval layer"]
     Q --> B
     Q --> G
-    X --> B
-    B --> G
-    G --> C["Counterfactual replay"]
-    C --> X
-    O --> OBS["Traces · latency · decisions · tool events"]
+
+    G --> CR["ML control ranker"]
+    CR --> C["Deterministic replay"]
+
+    O --> W["Isolation Forest\nworkflow health"]
+    O --> OBS["Traces · latency · decisions"]
+
     P --> H{"Human approval boundary"}
 ```
 
@@ -247,34 +307,18 @@ flowchart LR
 | Layer | Responsibility |
 | --- | --- |
 | Synthetic environment | Versioned enterprise graph, controls, telemetry, and scenarios |
-| Agent layer | Specialized Red, Blue, and Green reasoning workflows |
-| Orchestrator | State transitions, agent handoffs, retries, and workflow lifecycle |
+| Agent layer | Specialized Red, Blue, and Green workflows |
+| Learned routing | Context-aware abstract model-class selection with deterministic safety override |
 | Retrieval | Evidence-grounded local security knowledge retrieval |
 | Evidence graph | Shared entities, observations, paths, controls, and provenance |
+| ML control prioritization | Predict which defensive control should be replayed first |
+| Counterfactual engine | Deterministically recompute path risk after a proposed control |
+| Workflow ML | Surface unusual multi-agent execution patterns |
 | Policy gateway | Tool allowlists, role restrictions, and approval requirements |
-| Counterfactual engine | Re-score and replay after proposed defensive changes |
-| Observability | Agent steps, tool calls, timing, decisions, and failure context |
-| API / UI | Analyst-facing report and workflow inspection |
-
-## AI & model integration
-
-AegisMesh treats the model as a replaceable component of a larger security system.
-
-```text
-structured extraction  → low-cost model class
-retrieval               → embedding / retrieval component
-security investigation  → reasoning model class
-summarization           → compact generation model class
-high-impact proposal    → reasoning + approval requirement
-```
-
-The public repository does **not** claim results from external proprietary models that were not actually run. The checked-in implementation uses deterministic reference agents so orchestration, safety, retrieval, evidence, and evaluation can be tested offline.
-
-Production adapters can connect version-pinned models behind the same contracts and measure task success, groundedness, latency, token usage, cost, tool-selection quality, unsupported claims, and human-escalation rates.
+| Observability | Agent steps, tool calls, latency, decisions, and failure context |
+| API / UI | Analyst-facing reports and workflow inspection |
 
 ## Retrieval-grounded security reasoning
-
-The Blue and Green agents retrieve from a small local security corpus containing defensive concepts, technique context, and control guidance.
 
 ```text
 Agent question
@@ -290,15 +334,15 @@ agent reasoning
 cited evidence IDs
 ```
 
-The current implementation stays dependency-light and deterministic. A production deployment could replace this layer with enterprise search, vector embeddings, hybrid lexical/vector retrieval, tenant-specific threat intelligence, incident history, and access-controlled security knowledge.
+The public implementation remains deterministic and offline. Production adapters could replace the local retrieval component with hybrid vector/lexical retrieval, tenant-specific threat intelligence, prior incidents, and access-controlled enterprise knowledge.
 
 ## Evidence graph
 
-All agents work over a common evidence model rather than exchanging free-form conclusions. The graph preserves the distinction between observed synthetic evidence, modeled relationships, agent hypotheses, recommended controls, and replay results. That separation prevents a model-generated hypothesis from silently becoming a fact.
+All agents work over a common evidence model rather than exchanging free-form conclusions. The graph preserves the distinction between observed synthetic evidence, modeled relationships, agent hypotheses, recommended controls, and replay results. A generated hypothesis therefore cannot silently become an observed fact.
 
 ## Safety architecture
 
-AegisMesh uses **policy outside the model**.
+AegisMesh keeps **policy outside the model**.
 
 ```text
 Agent proposal
@@ -314,41 +358,45 @@ Allowed synthetic execution
 Immutable evidence / trace
 ```
 
-Key design principles:
+Key principles:
 
 - **Red is simulation-only.** No live exploitation, scanning, malware, credential access, or persistence.
 - **Tools are allow-listed.** Agents cannot invoke arbitrary shell, network, or cloud actions.
-- **High-impact actions require human approval.** The public lab records recommendations but does not execute consequential changes.
+- **High-impact model routing has a deterministic override.** ML cannot downgrade an approval-required task.
+- **Green predictions require deterministic replay.** ML cannot declare a control effective by itself.
+- **High-impact actions require human approval.** The lab records recommendations; it does not execute consequential production changes.
 - **Evidence is typed and attributable.** Conclusions point back to evidence IDs and graph paths.
-- **Agent output is untrusted.** Authorization and validation remain deterministic.
-- **Replay is isolated.** Counterfactual changes modify a copied synthetic environment, never the source environment.
+- **Replay is isolated.** Counterfactual changes modify copied synthetic state only.
 
 ## Evaluation model
 
-AegisMesh evaluates the **workflow**, not just the quality of one generated answer.
+AegisMesh evaluates the **workflow and the learned components**, not just one generated answer.
 
 | Dimension | What is evaluated |
 | --- | --- |
-| Simulation validity | Red Agent stays inside approved synthetic paths and tools |
-| Investigation coverage | Blue Agent identifies evidence supporting the simulated path |
+| Simulation validity | Red stays inside approved synthetic paths and tools |
+| Investigation coverage | Blue identifies evidence supporting the path |
 | Grounding | Investigation claims retain evidence references |
-| Hardening validity | Green Agent proposes controls that apply to the modeled path |
-| Counterfactual improvement | Replay produces lower modeled path risk when an effective control is applied |
-| Safety | Unauthorized or high-impact actions do not bypass policy |
-| Workflow completion | Required agent handoffs complete successfully |
-| Observability | Agent/tool decisions remain traceable |
+| Router quality | Gradient Boosting routing is evaluated on a deterministic synthetic holdout |
+| Control-ranker quality | Regression MAE/R² are computed on a deterministic synthetic holdout |
+| Hardening validity | Replay confirms that the selected control reduces the modeled path score |
+| Workflow health | Isolation Forest compares traces with a deterministic normal-workflow reference |
+| Safety | ML cannot bypass tool policy, approval requirements, or replay verification |
+| Observability | Agent/tool/model decisions remain traceable |
 
-Runtime reports expose the actual values generated from the checked-in fixtures. This README intentionally avoids presenting those synthetic regression values as production efficacy.
+Runtime reports expose the exact checked-in synthetic evaluation values. They validate implementation and regression behavior only and are not production-security efficacy claims.
 
 ## Example workflow
 
 ```text
-1. RED       Select a modeled path
-2. SIMULATE  Generate synthetic security events
-3. BLUE      Correlate evidence + retrieve context + reconstruct path
-4. GREEN     Evaluate and rank defensive controls
-5. REPLAY    Apply selected control to copied synthetic state
-6. REVIEW    Compare original vs hardened state with traces intact
+1. ROUTE     Learned router recommends task/model class
+2. RED       Select bounded simulated path
+3. SIMULATE  Generate synthetic security events
+4. BLUE      Correlate evidence + retrieve context + reconstruct path
+5. RANK      Green ML ranks candidate defensive controls
+6. REPLAY    Deterministically verify selected control on copied state
+7. MONITOR   Isolation Forest scores workflow health
+8. REVIEW    Evidence, ML outputs, policy decisions, and traces remain inspectable
 ```
 
 ## API
@@ -362,24 +410,6 @@ GET  /traces/{run_id}
 GET  /docs
 ```
 
-## Dashboard
-
-The browser dashboard is designed around four operational views:
-
-```text
-┌ RED AGENT ─────────────┐  ┌ BLUE AGENT ────────────┐
-│ simulated path         │  │ evidence & hypotheses  │
-│ modeled techniques     │  │ investigation status  │
-│ assumptions            │  │ grounding             │
-└────────────────────────┘  └────────────────────────┘
-
-┌ GREEN AGENT ───────────┐  ┌ SYSTEM / SAFETY ───────┐
-│ proposed controls      │  │ policy decisions       │
-│ counterfactual replay  │  │ tool events            │
-│ residual risk          │  │ workflow timing        │
-└────────────────────────┘  └────────────────────────┘
-```
-
 ## Quick Start
 
 ```bash
@@ -389,7 +419,7 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -e '.[api]'
 
-# Run synthetic multi-agent workflow
+# Run synthetic multi-agent + ML workflow
 aegismesh
 
 # Run tests
@@ -410,32 +440,33 @@ docker run --rm -p 8000:8000 aegismesh
 
 ```text
 aegismesh/
-├── agents.py          Red / Blue / Green agent workflows
-├── orchestrator.py    multi-agent state machine
+├── agents.py          Red / Blue / Green workflows
+├── orchestrator.py    multi-agent orchestration + workflow ML
 ├── environment.py     synthetic enterprise and replay state
 ├── evidence.py        evidence graph and provenance
 ├── retrieval.py       local retrieval / RAG layer
 ├── policy.py          tool policy and approval boundary
-├── model_router.py    pluggable model-task routing contract
+├── model_router.py    learned model routing interface
+├── ml.py              routing, control-ranking, and anomaly models
 ├── observability.py   run / step / tool traces
-├── report.py          evaluation and synthetic baseline
+├── report.py          workflow + ML evaluation report
 └── api.py             FastAPI + analyst dashboard
 
 data/                  synthetic scenarios and security knowledge
-docs/                  architecture, threat model, evaluation methodology
-tests/                 workflow, safety, replay, retrieval, and API tests
+docs/                  architecture, threat model, ML methodology
+tests/                 workflow, safety, replay, retrieval, ML, and API tests
 assets/                dashboard preview
 ```
 
 ## Production evolution
 
-A production-grade implementation would add authenticated least-privileged enterprise security connectors, durable workflow state and queues, hybrid vector + lexical retrieval with tenant isolation, versioned model adapters, OpenTelemetry traces and SLOs, checkpointing/retries/idempotency, human approval workflows, temporal evaluation holdouts, prompt-injection resistance, analyst feedback loops, and expanded authorized scenario libraries.
+A production-grade implementation would add authenticated least-privileged security connectors, durable workflow state and queues, hybrid vector + lexical retrieval, version-pinned model adapters, online routing feedback, temporal ML validation, drift monitoring, OpenTelemetry traces and SLOs, cost budgets, checkpointing and retries, analyst feedback loops, and expanded explicitly authorized scenario libraries.
 
 ## Evaluation boundary
 
 Everything checked into this repository is **synthetic, deterministic, and defensive**.
 
-AegisMesh does not establish real-world penetration-testing success, SOC detection recall, model safety, control effectiveness, or breach-risk reduction. Counterfactual risk values describe the internal synthetic graph only.
+AegisMesh does not establish real-world penetration-testing success, SOC detection recall, LLM quality, model safety, control effectiveness, or breach-risk reduction. The ML models are trained and evaluated on synthetic data/reference populations, and counterfactual risk values describe the internal synthetic graph only.
 
 No live credentials, customer telemetry, production tenants, autonomous containment, exploit execution, malware, persistence, or destructive actions are included.
 
@@ -447,6 +478,6 @@ This repository is intended for defensive security engineering, AI-system design
 
 <div align="center">
 
-### **Agents propose. Evidence grounds. Policy authorizes. Humans remain in control.**
+### **Agents propose · ML prioritizes · Evidence grounds · Policy authorizes · Replay verifies**
 
 </div>
